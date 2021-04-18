@@ -1,0 +1,32 @@
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+name: test
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go: [ '1.15', '1.16' ]
+    steps:
+      - name: Install Go ${{ matrix.go }}
+        if: success()
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go }}
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Use Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: Download Modules
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: go mod download
+      - name: Run tests
+        run: go test -v -covermode=atomic
