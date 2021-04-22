@@ -1,7 +1,6 @@
 package cmpmock
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -12,7 +11,6 @@ func Test_DiffEq(t *testing.T) {
 	type Foo struct{ CreateAt time.Time }
 	t1 := time.Now()
 	t2 := t1.Add(100 * time.Millisecond)
-	defaultString := "diff(-got +want) is %s"
 	type args struct {
 		want interface{}
 		opts cmp.Options
@@ -42,7 +40,7 @@ func Test_DiffEq(t *testing.T) {
 			if got := sut.Matches(x); got != tt.wantMatch {
 				t.Errorf("Matches() = %v, want %v", got, tt.wantMatch)
 			}
-			if got := sut.String(); got != fmt.Sprintf(defaultString, tt.wantDiff) {
+			if got := sut.String(); got != tt.wantDiff {
 				t.Errorf("String() = %q, want %q", got, tt.wantDiff)
 			}
 		})
