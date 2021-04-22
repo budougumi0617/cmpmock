@@ -5,10 +5,45 @@
 [![test](https://github.com/budougumi0617/cmpmock/workflows/test/badge.svg)](https://github.com/budougumi0617/cmpmock/actions?query=workflow%3Atest)
 [![reviewdog](https://github.com/budougumi0617/cmpmock/workflows/reviewdog/badge.svg)](https://github.com/budougumi0617/cmpmock/actions?query=workflow%3Areviewdog)
 
+Readable & Flexible matcher for https://github.com/golang/mock
+
 ## Description
 
 
+
+### Readable ouput
+
+Default output
+```
+expected call at /Users/budougumi0617/go/src/github.com/budougumi0617/cmpmock/_example/repo_test.go:26 doesn't match the argument at index 1.
+Got: &{John Due Tokyo 2021-04-23 02:46:58.145696 +0900 JST m=+0.000595005}
+Want: is equal to &{John Due Tokyo 2021-04-23 02:46:48.145646 +0900 JST m=-9.999455563}
+```
+
+use `cmpmock.DiffEq`
+```
+expected call at /Users/budougumi0617/go/src/github.com/budougumi0617/cmpmock/_example/repo_test.go:27 doesn't match the argument at index 1.
+Got: &{John Due Tokyo 2021-04-23 02:46:33.290458 +0900 JST m=+0.001035665}
+Want: diff(-got +want) is   &_example.User{
+ 	Name:     "John Due",
+ 	Address:  "Tokyo",
+- 	CreateAt: s"2021-04-23 02:46:33.290458 +0900 JST m=+0.001035665",
++ 	CreateAt: s"2021-04-23 02:46:23.290383 +0900 JST m=-9.999039004",
+}
+```
+
 ## Usage
+
+```go
+wantUser := &_example.User{
+	Name:     name,
+	Address:  address,
+	CreateAt: time.Now().Add(-10 * time.Second),
+}
+
+mrepo := mock_example.NewMockUserRepo(ctrl)
+mrepo.EXPECT().Save(ctx, cmpmock.DiffEq(wantUser)).Return(nil)
+```
 
 ## Installation
 
