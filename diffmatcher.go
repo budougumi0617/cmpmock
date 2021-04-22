@@ -31,5 +31,8 @@ func (d *diffMatcher) Matches(x interface{}) bool {
 }
 
 func (d *diffMatcher) String() string {
+	if d.diff == "" {
+		return ""
+	}
 	return fmt.Sprintf("diff(-got +want) is %s", d.diff)
 }
