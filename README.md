@@ -8,7 +8,15 @@
 Readable & Flexible matcher for https://github.com/golang/mock
 
 ## Description
+cmpmock provides a simple custom matcher. it is be able to modify behavior with `github.com/google/go-cmp/cmp/cmpopts`.
 
+```go
+import "github.com/google/go-cmp/cmp"
+
+func DiffEq(v interface{}, opts ...cmp.Option) gomock.Matcher
+```
+
+If `DiffEq` is set no `opts`, default behavior ignores a time differences of less than a second.
 
 
 ### Readable ouput
@@ -35,13 +43,12 @@ Want: diff(-got +want) is   &_example.User{
 ## Usage
 
 ```go
-wantUser := &_example.User{
-	Name:     name,
-	Address:  address,
-	CreateAt: time.Now().Add(-10 * time.Second),
+type UserRepo interface {
+  Save(context.Context, *User) error
 }
 
-mrepo := mock_example.NewMockUserRepo(ctrl)
+wantUser := &User{}
+mrepo := mock.NewMockUserRepo(ctrl)
 mrepo.EXPECT().Save(ctx, cmpmock.DiffEq(wantUser)).Return(nil)
 ```
 
