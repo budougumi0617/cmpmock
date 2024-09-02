@@ -8,7 +8,7 @@ import (
 	"github.com/budougumi0617/cmpmock"
 	"github.com/budougumi0617/cmpmock/_example"
 	"github.com/budougumi0617/cmpmock/_example/mock_example"
-	"github.com/golang/mock/gomock"
+	"go.uber.org/mock/gomock"
 )
 
 func TestUserUsecase_Save(t *testing.T) {
@@ -23,7 +23,7 @@ func TestUserUsecase_Save(t *testing.T) {
 		CreateAt: time.Now(),
 	}
 
-	mrepo := mock_example.NewMockUserRepo(ctrl)
+	mrepo := mock__example.NewMockUserRepo(ctrl)
 	mrepo.EXPECT().Save(ctx, cmpmock.DiffEq(wantUser)).Return(nil)
 
 	sut := _example.UserUsecase{Repo: mrepo}
